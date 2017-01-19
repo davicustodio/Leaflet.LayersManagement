@@ -17,6 +17,9 @@
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+        <script src="../plugins/leaflet-sidebar-master/src/L.Control.Sidebar.js"></script>        		
+        <link rel="stylesheet" href="../plugins/leaflet-sidebar-master/src/L.Control.Sidebar.css" />
+
         <script src="../src/layersManagement.js"></script>        
         <script src="../src/setupLayers.js"></script>
         <link rel="stylesheet" href="../css/layersManagement.css" />
@@ -33,7 +36,6 @@
     <body>
 	
 	    <div id="map"></div>
-	
 	    <script>
 		
 		    // Google layers
@@ -53,11 +55,18 @@
 		
 		    map.addLayer(g_roadmap);
 
-		    var control = new L.Control.layersManagement();
-			map.addControl(control);
+		    sidebar = L.control.layersManagement('sidebar', {
+			    closeButton: false,
+			    position: 'right'
+			});
 
-			setup = new SetupLayers();
-			setup.setHtml();
+			map.addControl(sidebar);
+			setTimeout(function() {
+			    sidebar.show();
+			}, 500);
+
+			//setup = new SetupLayers();
+			//setup.setHtml();
 		
 		</script>  
 

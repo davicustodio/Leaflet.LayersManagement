@@ -1,9 +1,1 @@
-#sidebar {
-    z-index: 2000;
-    @include box-sizing(border-box);
-    padding: 5px;
-}
 
-#sidebar .panel-heading {
-    cursor: move;
-}
