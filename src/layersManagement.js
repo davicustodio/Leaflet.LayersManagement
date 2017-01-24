@@ -6,8 +6,11 @@ L.Control.LayersManagement = L.Control.Sidebar.extend({
         autoPan: false,
         titlePanel: 'Layers List Management',
         panelClass: 'panel-info',
-        panelGlyphicon: 'glyphicon-list'
+        panelGlyphicon: 'glyphicon-list',
+        movable: true
     },
+
+    _linkTemplates: null,
 
     initialize: function (placeholder, options) {
         this.options = options ? options : this.options;
@@ -33,6 +36,9 @@ L.Control.LayersManagement = L.Control.Sidebar.extend({
         // Style and attach content container
         L.DomUtil.addClass(content, l + 'control');
         container.appendChild(content);
+
+        // initialize _linkTemplates
+        this._linkTemplates = document.querySelector("[href='../src/templates/templates.html']");
 
     },
 
@@ -66,42 +72,47 @@ L.Control.LayersManagement = L.Control.Sidebar.extend({
             .on(content, 'MozMousePixelScroll', stop);
 
         // input template sidebar.html to dom
-        var _this = this;
-        $('#'+this._placeholder).load( "../src/templates/sidebar.html", function(response, status, xhr){
-            // input the panel class
-            $('#'+_this._placeholder).addClass(_this.options.panelClass);
-            
-            // make the panel draggable
-            $('#'+_this._placeholder).draggable({
+        var template = this._linkTemplates.import.querySelector('#template_panel_info');
+        $('#'+this._placeholder).html($(template.innerHTML));
+        
+        // input the panel class
+        $('#'+this._placeholder).addClass(this.options.panelClass);
+        
+        // make the panel draggable
+        if( this.options.movable){
+            $('#'+ this._placeholder).draggable({
               cursor: "crosshair"
             });
+        }
 
-            // input the title panel
-            $('#titlePanel').text(_this.options.titlePanel);
+        // input the title panel
+        $('#titlePanel').text(this.options.titlePanel);
 
-            // input the panel glyph icon
-            $('#panelGlyphicon').addClass(_this.options.panelGlyphicon);
+        // input the panel glyph icon
+        $('#panelGlyphicon').addClass(this.options.panelGlyphicon);
 
-            // change titlePanel id for placeholder-titlePanel
-            $('#titlePanel').attr('id',_this._placeholder + '-titlePanel');
+        // change titlePanel id for placeholder-titlePanel
+        $('#titlePanel').attr('id',this._placeholder + '-titlePanel');
 
-            // change panelGlyphicon id for placeholder-panelGlyphicon
-            $('#panelGlyphicon').attr('id',_this._placeholder + '-panelGlyphicon');
+        // change panelGlyphicon id for placeholder-panelGlyphicon
+        $('#panelGlyphicon').attr('id',this._placeholder + '-panelGlyphicon');
 
-            // Create close button and attach it if configured
-            var content = L.DomUtil.get(_this._placeholder);
-            if (_this.options.closeButton) {
-                var close = _this._closeButton = L.DomUtil.create('a', 'close', content);
-                close.innerHTML = '&times;';
-            } 
+        // Create close button and attach it if configured
+        var content = L.DomUtil.get(this._placeholder);
+        if (this.options.closeButton) {
+            var close = this._closeButton = L.DomUtil.create('a', 'close', content);
+            close.innerHTML = '&times;';
+        } 
 
-            // Attach event to close button
-            if (_this.options.closeButton) {
-                var close = _this._closeButton;
-                L.DomEvent.on(close, 'click', _this.hide, _this);
-            }
+        // Attach event to close button
+        if (this.options.closeButton) {
+            var close = this._closeButton;
+            L.DomEvent.on(close, 'click', this.hide, this);
+        }
 
-        });
+        // make tabs
+        var tabs = new MakeTabs('sidebar');
+        
     },
 
     hide: function (e) {

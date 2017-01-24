@@ -1,0 +1,40 @@
+<template id="template_panel_info">
+    <div class="panel-heading title-movable container-fluid">
+        <div class="panel-heading row">
+            <div class="col-xs-1"><span id="panelGlyphicon" class="glyphicon " aria-hidden="true" /></div>
+            <div id="titlePanel">Layers Management</div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="layerManagement_tabs"></div>
+    </div>
+</template>
+
+<template id="template_tabs">
+    <div class="panel with-nav-tabs panel-default">
+        <div class="panel-heading">
+            <ul class="nav nav-tabs">
+            </ul>
+        </div>
+    </div>
+</template>
+
+<template id="template_tabs_detail">
+    <li id="${id}" class="{{if active }}active{{/if}}" data-toggle="tab">
+        <a href="#">${title}</a>
+    </li>
+</template>
+
+<template id="template_tab_all_layers_search">
+    <h2>Search Layers</h2>
+    <div id="custom-search-input">
+        <div class="input-group col-md-12">
+            <input type="text" class="form-control input-lg" placeholder="Search" />
+            <span class="input-group-btn">
+                <button class="btn btn-info btn-lg" type="button">
+                    <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</template>
