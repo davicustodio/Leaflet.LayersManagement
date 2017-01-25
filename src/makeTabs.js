@@ -58,7 +58,7 @@ var MakeTabs = L.Class.extend({
 								visibility: false,
 								metadataId: '',
 								type: 'wms'
-							},
+							}, 
 							{
 								id: 'sudeste_uso', 
 								title: 'Uso e Cobertura Sudeste',
@@ -109,6 +109,7 @@ var MakeTabs = L.Class.extend({
     createAllLayers(){
 		this.createTabs();
 		this.createSearchInAllLayers();
+		this.createGroupsAndLayers();
     },
 
     createTabs: function(){
@@ -159,57 +160,61 @@ var MakeTabs = L.Class.extend({
     },
 
     createGroupsAndLayers: function(){
-    	this.navigateGroups();
     	this.renderAccordion();
-    	this.navigateGroups();
-    }
+    	this.navigateGroups(this.options.groups);
+    },
 
     renderAccordion: function(){
     	// get the template for Accordion
         var accordion = this._linkTemplates.import.querySelector('#template_accordion').innerHTML;
-        $(this.id_tab_all_layers).append(accordion_Panel);
+        $(this.id_tab_all_layers).append(accordion);
         this.place_id_accordion = $(this.id_tab_all_layers).find('.accordion');
     },
 
-    renderGroupInDOM: function(group){
+    renderGroupInDOM: function(group, ref_dom_group_main){
     	// get the template for group
         var group_template = this._linkTemplates.import.querySelector('#template_groups').innerHTML;
 
-        // put the group template in DOM
-        $(this.place_id_accordion).append(group_template);
+        // generate the ref to the container for the creation of group, depending of dom_group exists from recursive call
+        var dom_group_main = ref_dom_group_main ? ref_dom_group_main : $(this.place_id_accordion);
 
-        var accordion_panel = $(this.place_id_accordion).find('flag_accordion_panel');
+        // put the group template in DOM
+        $(dom_group_main).append(group_template);
+
+        var accordion_panel = $(dom_group_main).find('.flag_accordion_panel');
 
         // render the group_title and group_id
         dom_group = $(accordion_panel).find('.header');
-        $.tmpl( $(dom_group), [{group_id : group.id}] );
-        $.tmpl( $(dom_group).find('.headerText'), [{group_title : group.title}] );
+
+        $(dom_group).attr('id', group.id);
+        $(dom_group).find('.headerText').html(group.title);
 
         // get the ref to the content layers
         var content_layers = $(accordion_panel).find('.content');
 
         // remove flag class from dom to permit newest groups
-        $(accordion_panel).find('.flag_accordion_panel').removeClass('flag_accordion_panel');
+        $(accordion_panel).removeClass('flag_accordion_panel');
 
         // return the ref to the content class for the container of layers
         return content_layers;
     },
 
-    navigateGroups: function(){
+    navigateGroups: function(groups_list, ref_dom_group_main){
     	// navigate to the options.groups list to render groups and layers
-    	this.options.groups.forEach(function(item){
+    	var _this = this;
+    	groups_list.forEach(function(item){
 
             // render the group in the DOM and get the ref to the content container for the layers
-            var dom_group = this.renderGroupInDOM(item);
+            var dom_group = _this.renderGroupInDOM(item, ref_dom_group_main);
 
 			// verify the exists of subGroup and call a recursive navigateGroups
 			if( item.groups ){
-				this.navigateGroups(item.groups);
+				_this.navigateGroups(item.groups, dom_group);
 			} else {
 				// navigate in layers
 				item.layers.forEach(function(layer){
 					// get the template for the layer
-        			var layer_template = this._linkTemplates.import.querySelector('#template_layers').innerHTML;
+        			var layer_template = _this._linkTemplates.import.querySelector('#template_layers').innerHTML;
 
         			// send the layer to the dom in content container ref
 					$(dom_group).append(layer_template);
@@ -218,15 +223,16 @@ var MakeTabs = L.Class.extend({
 					var dom_layer = $(dom_group).find('.flag_layer');
 
 					//render the layer_id
-					$.tmpl( $(dom_layer), [{layer_id : layer.id}] );
+					$(dom_layer).attr('id', layer.id);
+					// render the checkbox id
+					$(dom_layer).find('input').attr('id','checkbox-'+layer.id);
 					// rendet the layer_type
-					$.tmpl( $(dom_layer).find('.layer-icon'), [{layer_type : layer.type}] );
+					$(dom_layer).find('.layer-icon').attr('title', layer.type);
 					// render the layer_title
-					$.tmpl( $(dom_layer).find('.layer-title'), [{layer_title : layer.title}] );
+					$(dom_layer).find('.layer-title').html(layer.title);
 
 					// remove flag class from dom to permit newest layers
-        			$(dom_layer).find('.flag_layer').removeClass('flag_layer');
-
+        			$(dom_layer).removeClass('flag_layer');
 				});
 			}
 
