@@ -41,6 +41,34 @@
     </div>
 </template>
 
+<template id="template_accordion">
+	<div class="accordion">
+	</div>
+</template>
+
+<template id="template_groups">
+    <div class="accordion_panel flag_accordion_panel" style="display: block;">
+		<div class="header" id="${group_id}">
+	        <div class="headerIcon icon-arrow-right"></div>
+	        <div class="headerText">${group_title}</div>
+	    </div>
+	    <div class="content" style="display: none;">
+	 	</div>
+	</div>    
+</template>
+
+<template id="template_layers">
+    <div class="layer flag_layer" id="${layer_id}">
+        <input type="checkbox" id="${layer_checkbox_id}">
+        <div class="layer-tools">
+            <div class="layer-backendstatus-icon backendstatus-unknown" title=""></div>
+            <div class="layer-icon layer-wms" title="${layer_type}"></div>
+            <div class="layer-info"></div>
+        </div>
+        <div class="layer-title">${layer_title}</div>
+    </div>
+</template>
+
 <template>
 	<div class="accordion_panel">
 	    <div class="header" id="oskari_layerselector2_accordionPanel_Biota">
