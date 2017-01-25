@@ -3,15 +3,89 @@ var MakeTabs = L.Class.extend({
 	_linkTemplates : null,
 
 	options: {
+
 		tabs: [{
-			type: "all_layers",
-			title: "All Layers",
+			type: 'all_layers',
+			title: 'All Layers',
 			active: true
 		}, {
-			type: "selected_layers",
-			title: "Selected Layers",
+			type: 'selected_layers',
+			title: 'Selected Layers',
 			active: false
-		}]
+		}],
+
+		groups:[
+			{
+				id: 'agricultura',
+				title: 'Agricultura',
+				expanded: true,
+				layers: [
+					{
+						id: 'uso_terra', 
+						title: 'Uso da terra no estado de Amazonas',
+						leaflet_layer: '',
+						visibility: false,
+						metadataId: ''
+					},
+					{
+						id: 'pastagens_degradadas', 
+						title: 'Pastagens Degradadas',
+						leaflet_layer: '',
+						visibility: false,
+						metadataId: ''
+					}
+				]
+			},
+			{
+				id: 'pecuaria',
+				title: 'pecuaria',
+				expanded: false,
+				groups: [
+					{
+						id: 'pecuaria_sudeste',
+						title: 'Pecuaria Sudeste',
+						expanded: false,
+						layers:[
+							{
+								id: 'sudeste_plantio', 
+								title: 'Plantio no Sudeste',
+								leaflet_layer: '',
+								visibility: false,
+								metadataId: ''
+							},
+							{
+								id: 'sudeste_uso', 
+								title: 'Uso e Cobertura Sudeste',
+								leaflet_layer: '',
+								visibility: false,
+								metadataId: ''
+							}
+						]
+					},
+					{
+						id: 'pecuaria_nordeste',
+						title: 'Pecuaria Nordeste',
+						expanded: false,
+						layers:[
+							{
+								id: 'nordeste_precipitacao', 
+								title: 'Precipitação Nordeste',
+								leaflet_layer: '',
+								visibility: false,
+								metadataId: ''
+							},
+							{
+								id: 'nordeste_ivp', 
+								title: 'IVP Nordeste',
+								leaflet_layer: '',
+								visibility: false,
+								metadataId: ''
+							}
+						]
+					}
+				]
+			}
+		]
 	},
 
     initialize: function (placeholder, options, place_id) {
